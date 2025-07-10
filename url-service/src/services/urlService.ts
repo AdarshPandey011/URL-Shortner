@@ -1,8 +1,9 @@
 import { nanoid } from "nanoid";
 import UrlModel from "../models/urlModel";
 
-export const shortUrl = async (originalUrl:string,baseurl:string)=>{
 
+export const urlService = async (originalUrl:string,baseurl:string)=>{
+    // const { nanoid } = await import("nanoid"); // dynamic import
     const shortCode = nanoid(6);
 
     const existing = await UrlModel.findOne({ originalUrl });
@@ -22,3 +23,5 @@ export const shortUrl = async (originalUrl:string,baseurl:string)=>{
 
 
 }
+
+export default urlService;

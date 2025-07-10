@@ -1,6 +1,14 @@
 import express from 'express';
 import urlRoutes from './routes/urlRoutes';
-import { url } from 'inspector';
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+dotenv.config(); // Load environment variables from .env file
+
+mongoose.connect(process.env.MONGO_URL || 'mongodb://localhost:27017/url-shortner').then(() => {
+  console.log("Connected to MongoDB");
+}).catch((err) => {
+  console.error("Error connecting to MongoDB:", err);
+});
 
 const app = express();
 app.use(express.json());
