@@ -1,48 +1,34 @@
 import { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 
-
-export default function Signup() {
-  const [username, setUsername] = useState("");
+const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
+  const { login } = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError("");
-    setSuccess("");
-    setTimeout(async () => {
-      if (!username.trim() || !email.trim() || !password.trim()) {
-        setError("All fields are required.");
-        setLoading(false);
-        return;
-      }
-      try {
-        const res = await axios.post("http://localhost:3000/user/signup", {
-          username,
-          email,
-          password,
-        });
-        setSuccess(res.data.message || "Signup successful!");
-        setUsername("");
-        setEmail("");
-        setPassword("");
-        
 
-      } catch (err) {
-        setError(
-          err.response?.data?.message || "Signup failed. Please try again."
-        );
-      }
-      setLoading(false);
+    try {
+      const res = await axios.post("http://localhost:3000/user/login", {
+        email,
+        password,
+      });
+
+      const token = res.data.token;
+      login(token);
       navigate("/home");
-    }, 1000);
+    } catch (err) {
+      setError(err.response?.data?.message || "Invalid credentials.");
+    }
+    setLoading(false);
   };
 
   return (
@@ -90,6 +76,7 @@ export default function Signup() {
           }}>AN</span>
         </div>
       </nav>
+
       <div style={{
         flex: 1,
         display: "flex",
@@ -111,46 +98,29 @@ export default function Signup() {
             WebkitTextFillColor: "transparent",
             marginBottom: 16
           }}>
-            Create Your Account
+            Welcome Back!
           </h1>
           <p style={{
             fontSize: "1.2rem",
             color: "#444",
             marginBottom: 40
           }}>
-            Sign up to start shortening your links!
+            Login to your account to shorten URLs instantly.
           </p>
-          <form onSubmit={handleSubmit} style={{
+
+          <form onSubmit={handleLogin} style={{
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
             gap: 16,
-            marginBottom: 32,
+            marginBottom: 16,
             maxWidth: 400,
             margin: "0 auto"
           }}>
             <input
-              type="text"
-              value={username}
-              onChange={e => setUsername(e.target.value)}
-              placeholder="Username"
-              style={{
-                width: "100%",
-                padding: "14px 20px",
-                fontSize: "1.1rem",
-                border: "none",
-                borderRadius: "8px",
-                background: "#f3f4f6",
-                outline: "none",
-                boxShadow: "0 2px 8px #eee",
-                color: "#6b7280",
-              }}
-              required
-            />
-            <input
               type="email"
               value={email}
-              onChange={e => setEmail(e.target.value)}
+              onChange={(e) => setEmail(e.target.value)}
               placeholder="Email"
               style={{
                 width: "100%",
@@ -168,7 +138,7 @@ export default function Signup() {
             <input
               type="password"
               value={password}
-              onChange={e => setPassword(e.target.value)}
+              onChange={(e) => setPassword(e.target.value)}
               placeholder="Password"
               style={{
                 width: "100%",
@@ -199,14 +169,18 @@ export default function Signup() {
                 boxShadow: "0 2px 8px #eee"
               }}
             >
-              {loading ? "Signing up..." : "Sign Up"}
+              {loading ? "Logging in..." : "Login"}
             </button>
           </form>
-          {success && (
-            <div style={{ color: "green", marginTop: 12, textAlign: "center" }}>
-              {success}
-            </div>
-          )}
+
+          {/* 👇 Signup link here */}
+          <p style={{ marginTop: 16, fontSize: "0.95rem", color: "#444" }}>
+            Don’t have an account?{" "}
+            <Link to="/signup" style={{ color: "#6a5af9", fontWeight: "bold", textDecoration: "none" }}>
+              Sign up
+            </Link>
+          </p>
+
           {error && (
             <div style={{ color: "red", marginTop: 12, textAlign: "center" }}>
               {error}
@@ -216,4 +190,6 @@ export default function Signup() {
       </div>
     </div>
   );
-}
+};
+
+export default Login;

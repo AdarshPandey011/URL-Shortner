@@ -1,5 +1,8 @@
 import { useState } from "react";
 import axios from "axios";
+import Navbar from "../components/Navbar"; // 🔁 Import your Navbar
+// make sure path is correct based on your project structure
+
 export default function Home() {
   const [url, setUrl] = useState("");
   const [shortUrl, setShortUrl] = useState("");
@@ -7,24 +10,24 @@ export default function Home() {
   const [error, setError] = useState("");
   const [copied, setCopied] = useState(false);
 
-  const handleSubmit =  (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     setLoading(true);
     setError("");
     setShortUrl("");
     setCopied(false);
-    setTimeout(async() => {
+    setTimeout(async () => {
       if (url.trim() === "") {
         setError("Please enter a valid URL.");
         setLoading(false);
         return;
       }
-      //setShortUrl("https://short.ly/" + Math.random().toString(36).substring(2, 8));
-      await axios.post("http://localhost:3000/", { originalUrl:url })
-      .then(res => {
+      try {
+        const res = await axios.post("http://localhost:3000/", { originalUrl: url });
         setShortUrl(res.data.shortUrl);
-        console.log(res.data);
-      })
+      } catch (err) {
+        setError("Something went wrong.");
+      }
       setLoading(false);
     }, 1000);
   };
@@ -46,40 +49,9 @@ export default function Home() {
       display: "flex",
       flexDirection: "column"
     }}>
-      <nav style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        padding: "32px 64px 0 64px",
-        background: "transparent"
-      }}>
-        <div style={{ display: "flex", alignItems: "center" }}>
-          <span style={{
-            fontSize: 28,
-            fontWeight: 700,
-            color: "#3b82f6",
-            marginRight: 10
-          }}>🔗</span>
-          <span style={{
-            fontSize: 24,
-            fontWeight: 700,
-            color: "#6a5af9"
-          }}>LinkShort</span>
-        </div>
-        <div>
-          <a href="#" style={{ margin: "0 20px", color: "#6a5af9", fontWeight: 500, textDecoration: "none" }}>Home</a>
-          <a href="#" style={{ margin: "0 20px", color: "#6a5af9", fontWeight: 500, textDecoration: "none" }}>Features</a>
-          <a href="#" style={{ margin: "0 20px", color: "#6a5af9", fontWeight: 500, textDecoration: "none" }}>Pricing</a>
-          <span style={{
-            marginLeft: 30,
-            padding: "8px 16px",
-            border: "2px solid #6a5af9",
-            borderRadius: "50px",
-            color: "#6a5af9",
-            fontWeight: 700
-          }}>AN</span>
-        </div>
-      </nav>
+      
+      <Navbar /> {/* 🔁 Replaces the old <nav> with logout included */}
+
       <div style={{
         flex: 1,
         display: "flex",
@@ -153,6 +125,7 @@ export default function Home() {
               {loading ? "Shortening..." : "Shorten URL"}
             </button>
           </form>
+
           <div style={{
             background: "#f9fafb",
             borderRadius: 12,
@@ -168,8 +141,9 @@ export default function Home() {
               color: "#6b7280",
               marginBottom: 10
             }}>
-              { "https://example.com"}
+              {"https://example.com"}
             </div>
+
             {shortUrl && (
               <div style={{
                 display: "flex",
@@ -207,6 +181,7 @@ export default function Home() {
                 </button>
               </div>
             )}
+
             {error && (
               <div style={{ color: "red", marginTop: 12, textAlign: "center" }}>
                 {error}
