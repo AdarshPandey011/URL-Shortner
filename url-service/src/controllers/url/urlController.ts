@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import UrlModel from "../models/urlModel";
-import urlService from "../services/urlService";
+import UrlModel from "../../models/urlModel";
+import urlService from "../../services/urlService";
 
 async function createShortUrl(req:Request,res:Response)
 {

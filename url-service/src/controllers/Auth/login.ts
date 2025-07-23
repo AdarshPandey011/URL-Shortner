@@ -6,6 +6,7 @@ import { verifyPassword } from "../../utility/verifyPassword";
 export async function login(req:Request, res:Response){
     const {email,password} = req.body
     const user = await userService({email})
+    console.log(req.body)
 
     if(user){
         const isMatch = await verifyPassword({password, hashedPassword: user.password});

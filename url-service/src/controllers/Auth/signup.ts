@@ -5,7 +5,7 @@ import { hash } from "crypto";
 import { hashedPassword } from "../../utility/hashedPassword";
 
 export async function signup(req:Request,res:Response){
-
+    console.log(req.body)
     const {username,email,password} = req.body
 
     const user = await userService({email})

@@ -19,8 +19,9 @@ mongoose.connect(process.env.MONGO_URL || 'mongodb://localhost:27017/url-shortne
 app.use(express.json());
 app.use(urlRoutes);
 app.use('/user', userRouter);
-// app.listen(3000, () => {
-//   console.log("Server is running on port 3000");
-// });
+
+app.listen(3000, () => {
+  console.log("Server is running on port 3000");
+});
 
 export default app; // Export the app for use in other modules
