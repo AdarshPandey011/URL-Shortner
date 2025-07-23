@@ -4,9 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "ts-node-dev --respawn src/index.ts",
-    "build": "tsc"
-  },
+  "dev": "ts-node-dev --respawn src/index.ts",
+  "cluster": "ts-node src/server.ts",
+  "build": "tsc",
+  "start": "node dist/server.js",
+  "pm2": "pm2 start dist/server.js -i max --name url-shortner"
+},
+
   "keywords": [],
   "author": "",
   "license": "ISC",
